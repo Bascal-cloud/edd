@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FIVE BLOOD HOUSES · 다섯 진조 가문</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Noto+Sans+KR:wght@300;500;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b0c;
+    --ink: #f5f5f5;
+    --mid: #9a9a9e;
+    --dim: #3a3a3f;
+    --pop: #ff2e6d;
+    --glass: rgba(255,255,255,0.06);
+    --glass-line: rgba(255,255,255,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh; overflow-x: hidden;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+    background: var(--bg);
+  }
+  body::before, body::after {
+    content: ""; position: fixed; z-index: -1; border-radius: 50%; filter: blur(60px);
+  }
+  body::before { width: 520px; height: 520px; top: -120px; left: -120px; background: #3b3b42; }
+  body::after  { width: 600px; height: 600px; bottom: -160px; right: -160px; background: #22222a; }
+
+  .display { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; letter-spacing: -0.02em; line-height: .86; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px 70px; }
+
+  .ticker { overflow: hidden; border-top: 1px solid var(--glass-line); border-bottom: 1px solid var(--glass-line); padding: 12px 0; white-space: nowrap; background: rgba(255,255,255,0.03); }
+  .ticker span { display: inline-block; font-family: 'Archivo Black'; font-size: 22px; color: var(--mid); padding-right: 36px; text-transform: uppercase; }
+  .ticker span b { color: var(--pop); font-weight: 400; }
+
+  header { padding: 40px 0 36px; }
+  .hero-title { font-size: clamp(64px, 16vw, 200px); color: var(--ink); }
+  .hero-title .accent { color: var(--pop); }
+  .hero-sub { margin-top: 18px; font-size: 15px; font-weight: 300; letter-spacing: 0.35em; color: var(--mid); }
+  .hero-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 28px; font-size: 13px; color: var(--mid); letter-spacing: .2em; text-transform: uppercase; }
+
+  .glass {
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    border-radius: 28px;
+    backdrop-filter: blur(22px) saturate(120%);
+    -webkit-backdrop-filter: blur(22px) saturate(120%);
+    box-shadow: 0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);
+    padding: 28px;
+  }
+
+  section { margin-top: 28px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin: 0 4px 18px; flex-wrap: wrap; }
+  .sec-no { font-family: 'Archivo Black'; font-size: 64px; line-height: .8; color: transparent; -webkit-text-stroke: 1.5px var(--mid); }
+  .sec-title { font-family: 'Archivo Black'; font-size: clamp(30px, 6vw, 56px); text-transform: uppercase; line-height: .9; }
+  .sec-kr { font-size: 15px; font-weight: 500; color: var(--mid); width: 100%; }
+  .sec-head.reveal { opacity: 0; transform: translateX(-60px); transition: opacity .25s ease, transform .35s cubic-bezier(.2,.9,.2,1); }
+  .sec-head.reveal.in { opacity: 1; transform: none; }
+  .rv { opacity: 0; }
+  .rv.in { opacity: 1; animation: rvUp .7s cubic-bezier(.2,.9,.2,1) var(--d, 0s) both; }
+  @keyframes rvUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { opacity: 1; }
+    .rv.in { animation: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sec-head.reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  .origin svg { width: 100%; height: auto; display: block; }
+
+  .houses { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .house { position: relative; overflow: hidden; border-radius: 22px; padding: 22px 20px 20px; background: rgba(255,255,255,.05); border: 1px solid var(--glass-line); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); min-height: 230px; display: flex; flex-direction: column; justify-content: space-between; }
+  .house .idx { font-family: 'Archivo Black'; font-size: 14px; color: var(--pop); letter-spacing: .1em; }
+  .house .glyph { width: 56px; height: 56px; margin: 10px 0; }
+  .house .glyph svg { width: 100%; height: 100%; display: block; }
+  .house h3 { font-family: 'Archivo Black'; font-size: 30px; line-height: .95; text-transform: uppercase; }
+  .house { cursor: pointer; user-select: none; transition: outline-color .25s; outline: 2px solid transparent; outline-offset: 4px; }
+  .house:hover, .house.active { outline-color: var(--pop); }
+  .house .meaning { max-height: 0; opacity: 0; overflow: hidden; transform: translateY(-8px); font-size: 15px; font-weight: 500; color: var(--ink); margin-top: 0; padding-top: 0; border-top: 1px solid transparent; transition: max-height .5s ease, opacity .4s ease, transform .5s ease, margin-top .5s ease, padding-top .5s ease, border-color .4s ease; transition-delay: 0s; }
+  .house:hover .meaning, .house.active .meaning { max-height: 80px; opacity: 1; transform: translateY(0); margin-top: 10px; padding-top: 10px; border-top-color: var(--glass-line); transition-delay: .2s; }
+  .house .kr { font-size: 18px; font-weight: 900; margin-top: 6px; }
+  .house .en { font-size: 12px; font-weight: 300; color: var(--mid); letter-spacing: .15em; text-transform: uppercase; margin-top: 4px; }
+
+  .traits { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .trait { border-radius: 22px; padding: 22px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  .trait .big { font-family: 'Archivo Black'; font-size: 40px; line-height: .9; text-transform: uppercase; }
+  .trait .big.pop { color: var(--pop); }
+  .trait .kr { font-size: 16px; font-weight: 900; margin-top: 12px; }
+  .trait p { font-size: 14px; color: var(--mid); line-height: 1.6; margin-top: 6px; }
+
+  .faces { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .face { border-radius: 26px; padding: 26px; border: 1px solid var(--glass-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .face.public { background: rgba(255,255,255,.08); }
+  .face.hidden { background: rgba(0,0,0,.45); }
+  .face .label { font-family: 'Archivo Black'; font-size: 44px; line-height: .9; text-transform: uppercase; }
+  .face.hidden .label { color: var(--pop); }
+  .face ul { list-style: none; margin-top: 18px; display: grid; gap: 12px; }
+  .face li { font-size: 15px; line-height: 1.55; padding-left: 22px; position: relative; color: #d6d6d9; }
+  .face li::before { content: "■"; position: absolute; left: 0; top: 2px; font-size: 11px; color: var(--mid); }
+  .face.hidden li::before { color: var(--pop); }
+  .note { margin-top: 14px; text-align: center; font-family: 'Archivo Black'; font-size: 22px; text-transform: uppercase; padding: 18px; border-radius: 22px; border: 1px dashed var(--glass-line); color: var(--ink); }
+
+  .principles { display: grid; gap: 14px; }
+  .principle { display: grid; grid-template-columns: 150px 1fr; gap: 20px; align-items: center; padding: 22px 26px; border-radius: 24px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  .principle .num { font-family: 'Archivo Black'; font-size: 96px; line-height: .8; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+  .principle h3 { font-family: 'Archivo Black'; font-size: 28px; line-height: .95; text-transform: uppercase; }
+  .principle .kr { font-size: 17px; font-weight: 900; margin-top: 6px; }
+  .principle p { font-size: 14px; color: var(--mid); line-height: 1.6; margin-top: 6px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--glass-line); color: var(--ink); background: rgba(255,255,255,.05); }
+  .chain { margin-top: 14px; padding: 26px; border-radius: 26px; background: var(--pop); color: #0b0b0c; text-align: center; }
+  .chain .line1 { font-size: 16px; font-weight: 500; }
+  .chain .line2 { font-family: 'Archivo Black'; font-size: clamp(28px, 5vw, 48px); line-height: .95; text-transform: uppercase; margin-top: 8px; }
+
+  .law svg { width: 100%; height: auto; display: block; }
+  .laws { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 16px; }
+  .lawcard { border-radius: 22px; padding: 22px; background: rgba(0,0,0,.4); border: 1px solid var(--glass-line); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+  .lawcard .n { font-family: 'Archivo Black'; font-size: 44px; line-height: .9; color: var(--mid); }
+  .lawcard.key { border-color: var(--pop); }
+  .lawcard.key .n { color: var(--pop); }
+  .lawcard h3 { font-size: 18px; font-weight: 900; margin-top: 10px; }
+  .lawcard p { font-size: 14px; color: var(--mid); line-height: 1.6; margin-top: 6px; }
+
+  footer { margin-top: 60px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-family: 'Archivo Black'; font-size: 14px; color: var(--mid); text-transform: uppercase; letter-spacing: .1em; }
+
+  @media (max-width: 720px) {
+    .faces { grid-template-columns: 1fr; }
+    .principle { grid-template-columns: 1fr; gap: 6px; }
+    .principle .num { font-size: 64px; }
+    .glass { padding: 20px; }
+    .house { min-height: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1 class="display hero-title">Five<br><span class="accent">Blood</span><br>Houses</h1>
+    <div class="hero-sub">다섯 진조 가문</div>
+    <div class="hero-meta">
+      <span>World Infographic</span>
+      <span>Lineage · Hunger · Pact</span>
+    </div>
+  </header>
+
+  <div class="ticker">
+    <span>One Blood <b>●</b> Never Aging <b>●</b> Human Blood <b>●</b> Reads Desire <b>●</b> No Forced Taking <b>●</b> Break the Pact <b>●</b></span>
+    <span>One Blood <b>●</b> Never Aging <b>●</b> Human Blood <b>●</b> Reads Desire <b>●</b> No Forced Taking <b>●</b> Break the Pact <b>●</b></span>
+  </div>
+
+  <!-- 1 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">01</div>
+      <div class="sec-title">Origin</div>
+      <div class="sec-kr">태초의 하나의 피</div>
+    </div>
+    <div class="glass origin">
+      <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="하나의 피에서 다섯 가문이 갈라지는 도식">
+        <g stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none">
+          <path d="M400 110 C400 150, 130 150, 130 210"/>
+          <path d="M400 110 C400 150, 290 150, 290 210"/>
+          <path d="M400 110 L400 210"/>
+          <path d="M400 110 C400 150, 510 150, 510 210"/>
+          <path d="M400 110 C400 150, 670 150, 670 210"/>
+        </g>
+        <path d="M400 20 C360 60, 350 90, 370 105 Q400 120 430 105 C450 90, 440 60, 400 20 Z" fill="#ff2e6d"/>
+        <text x="400" y="14" text-anchor="middle" fill="#f5f5f5" font-family="Archivo Black" font-size="15" dy="-4">ONE BLOOD</text>
+
+        <circle cx="130" cy="240" r="36" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+        <svg x="114" y="224" width="32" height="32" viewBox="0 0 24 24">
+          <g fill="#f5f5f5">
+            <circle cx="12" cy="12" r="2.6"/>
+            <path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z"/>
+            <path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(72 12 12)"/>
+            <path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(144 12 12)"/>
+            <path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(216 12 12)"/>
+            <path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(288 12 12)"/>
+          </g>
+        </svg>
+        <text x="130" y="296" fill="#f5f5f5" font-family="Noto Sans KR" font-weight="900" font-size="15" text-anchor="middle">장미</text>
+
+        <circle cx="290" cy="240" r="36" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+        <svg x="274" y="224" width="32" height="32" viewBox="0 0 24 24">
+          <g fill="#f5f5f5">
+            <ellipse cx="11" cy="13" rx="6.5" ry="4.2" transform="rotate(-20 11 13)"/>
+            <circle cx="17" cy="7" r="3"/>
+            <path d="M19.6 6.2L23.2 7.8 19.6 9.2Z"/>
+            <path d="M5 15.5L0.8 19 1.8 13.8Z"/>
+          </g>
+        </svg>
+        <text x="290" y="296" fill="#f5f5f5" font-family="Noto Sans KR" font-weight="900" font-size="15" text-anchor="middle">까마귀</text>
+
+        <circle cx="400" cy="240" r="36" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+        <svg x="384" y="224" width="32" height="32" viewBox="0 0 24 24">
+          <path fill="#f5f5f5" d="M14 3a9 9 0 1 0 7 14 7 7 0 1 1-7-14z"/>
+        </svg>
+        <text x="400" y="296" fill="#f5f5f5" font-family="Noto Sans KR" font-weight="900" font-size="15" text-anchor="middle">은빛 달</text>
+
+        <circle cx="510" cy="240" r="36" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+        <svg x="494" y="224" width="32" height="32" viewBox="0 0 24 24">
+          <path d="M5 21C11 21 4 15 12 13.5S19 6 19 3" fill="none" stroke="#f5f5f5" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="19" cy="3" r="1.6" fill="#f5f5f5"/>
+        </svg>
+        <text x="510" y="296" fill="#f5f5f5" font-family="Noto Sans KR" font-weight="900" font-size="15" text-anchor="middle">황금 뱀</text>
+
+        <circle cx="670" cy="240" r="36" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+        <svg x="654" y="224" width="32" height="32" viewBox="0 0 24 24">
+          <g fill="#f5f5f5">
+            <ellipse cx="7" cy="8" rx="4.5" ry="4" transform="rotate(-25 7 8)"/>
+            <ellipse cx="17" cy="8" rx="4.5" ry="4" transform="rotate(25 17 8)"/>
+            <ellipse cx="8" cy="16.5" rx="3" ry="3"/>
+            <ellipse cx="16" cy="16.5" rx="3" ry="3"/>
+            <rect x="11.2" y="5" width="1.6" height="14" rx="0.8"/>
+          </g>
+        </svg>
+        <text x="670" y="296" fill="#f5f5f5" font-family="Noto Sans KR" font-weight="900" font-size="15" text-anchor="middle">백색 나비</text>
+
+        <text x="400" y="340" text-anchor="middle" fill="#9a9a9e" font-family="Noto Sans KR" font-size="13">다른 뱀파이어와 구별되는 혈통 · 늙지 않음 · 인간의 피로 힘을 유지</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">02</div>
+      <div class="sec-title">Five Houses</div>
+      <div class="sec-kr">다섯 가문</div>
+    </div>
+    <div class="houses">
+      <div class="house"><div class="idx">01</div><div><div class="glyph"><svg viewBox="0 0 24 24"><g fill="#f5f5f5"><circle cx="12" cy="12" r="2.6"/><path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z"/><path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(72 12 12)"/><path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(144 12 12)"/><path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(216 12 12)"/><path d="M12 9.5C10.2 7.5 10.4 4.2 12 2.6 13.6 4.2 13.8 7.5 12 9.5Z" transform="rotate(288 12 12)"/></g></svg></div><h3>Crimson<br>Rose</h3><div class="kr">붉은 장미</div><div class="meaning">열정과 지배</div></div></div>
+      <div class="house"><div class="idx">02</div><div><div class="glyph"><svg viewBox="0 0 24 24"><g fill="#f5f5f5"><ellipse cx="11" cy="13" rx="6.5" ry="4.2" transform="rotate(-20 11 13)"/><circle cx="17" cy="7" r="3"/><path d="M19.6 6.2L23.2 7.8 19.6 9.2Z"/><path d="M5 15.5L0.8 19 1.8 13.8Z"/></g></svg></div><h3>Black<br>Raven</h3><div class="kr">검은 까마귀</div><div class="meaning">이동과 비밀</div></div></div>
+      <div class="house"><div class="idx">03</div><div><div class="glyph"><svg viewBox="0 0 24 24"><path fill="#f5f5f5" d="M14 3a9 9 0 1 0 7 14 7 7 0 1 1-7-14z"/></svg></div><h3>Silver<br>Moon</h3><div class="kr">은빛 달</div><div class="meaning">순수와 유혹</div></div></div>
+      <div class="house"><div class="idx">04</div><div><div class="glyph"><svg viewBox="0 0 24 24"><path d="M5 21C11 21 4 15 12 13.5S19 6 19 3" fill="none" stroke="#f5f5f5" stroke-width="2.2" stroke-linecap="round"/><circle cx="19" cy="3" r="1.6" fill="#f5f5f5"/></svg></div><h3>Golden<br>Serpent</h3><div class="kr">황금 뱀</div><div class="meaning">욕망과 권력</div></div></div>
+      <div class="house"><div class="idx">05</div><div><div class="glyph"><svg viewBox="0 0 24 24"><g fill="#f5f5f5"><ellipse cx="7" cy="8" rx="4.5" ry="4" transform="rotate(-25 7 8)"/><ellipse cx="17" cy="8" rx="4.5" ry="4" transform="rotate(25 17 8)"/><ellipse cx="8" cy="16.5" rx="3" ry="3"/><ellipse cx="16" cy="16.5" rx="3" ry="3"/><rect x="11.2" y="5" width="1.6" height="14" rx="0.8"/></g></svg></div><h3>White<br>Butterfly</h3><div class="kr">백색 나비</div><div class="meaning">구원과 저주</div></div></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">03</div>
+      <div class="sec-title">Traits</div>
+      <div class="sec-kr">진조의 특성</div>
+    </div>
+    <div class="traits">
+      <div class="trait"><div class="big">Pure<br>Lineage</div><div class="kr">구별되는 혈통</div><p>다른 뱀파이어와 달리 태초의 피에서 직접 이어진 혈통입니다.</p></div>
+      <div class="trait"><div class="big pop">Never<br>Aging</div><div class="kr">늙지 않음</div><p>수백 년을 같은 얼굴로 살아갑니다.</p></div>
+      <div class="trait"><div class="big">Feeds on<br>Human Blood</div><div class="kr">인간의 피로 힘 유지</div><p>사냥 없이는 힘을 유지할 수 없습니다.</p></div>
+      <div class="trait"><div class="big">Reads<br>Desire</div><div class="kr">욕망을 읽음</div><p>인간의 욕망을 읽어 자신들의 세계로 끌어들입니다.</p></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">04</div>
+      <div class="sec-title">Two Faces</div>
+      <div class="sec-kr">두 얼굴의 사회</div>
+    </div>
+    <div class="faces">
+      <div class="face public">
+        <div class="label">Surface</div>
+        <div style="font-size:15px;font-weight:500;color:var(--mid);margin-top:6px;">겉의 세계</div>
+        <ul>
+          <li>인간과 같은 사교계에 머묾</li>
+          <li>혼담과 동업으로 인간 귀족과 연결됨</li>
+          <li>황실과 맺은 평화를 지킴</li>
+        </ul>
+      </div>
+      <div class="face hidden">
+        <div class="label">Black Market</div>
+        <div style="font-size:15px;font-weight:500;color:var(--mid);margin-top:6px;">속의 세계</div>
+        <ul>
+          <li>사냥 없이 힘을 유지할 수 없는 순혈들</li>
+          <li>뒷시장에서 인간의 피를 사들임</li>
+          <li>모두가 알지만 공식적으로는 존재하지 않는 거래</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">Peace outside · Open secret inside</div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">05</div>
+      <div class="sec-title">Blood Trade</div>
+      <div class="sec-kr">피의 거래, 세 가지 원칙</div>
+    </div>
+    <div class="principles">
+      <div class="principle">
+        <div class="num">01</div>
+        <div>
+          <h3>Leave Proof</h3>
+          <div class="kr">증거를 남긴다</div>
+          <p>계약은 인장과 서명, 혈액 표본으로 증거를 남깁니다.</p>
+          <div class="tags"><span class="tag">인장</span><span class="tag">서명</span><span class="tag">혈액 표본</span></div>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="num">02</div>
+        <div>
+          <h3>Always a Price</h3>
+          <div class="kr">대가는 반드시 존재한다</div>
+          <p>피를 얻는 대가는 돈이든 정보든 반드시 치러집니다.</p>
+          <div class="tags"><span class="tag">돈</span><span class="tag">정보</span></div>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="num">03</div>
+        <div>
+          <h3>No Immunity</h3>
+          <div class="kr">가문의 이름은 면죄부가 되지 못한다</div>
+          <p>어떤 명문가도 거래의 죄를 가려 주지 못합니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chain">
+      <div class="line1">거래의 증거가 드러나는 순간</div>
+      <div class="line2">→ That house becomes the target of blackmail</div>
+      <div class="line1" style="margin-top:6px;">그 가문은 다른 가문의 협박 대상이 된다</div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">06</div>
+      <div class="sec-title">The Law</div>
+      <div class="sec-kr">진조의 율법</div>
+    </div>
+    <div class="glass law">
+      <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="다섯 가문이 율법으로 묶인 도식">
+        <circle cx="400" cy="150" r="110" fill="none" stroke="#ff2e6d" stroke-width="3" stroke-dasharray="6 8"/>
+        <g font-family="Noto Sans KR" font-weight="900" text-anchor="middle">
+          <circle cx="400" cy="40" r="30" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+          <text x="400" y="46" fill="#f5f5f5" font-size="13">장미</text>
+          <circle cx="505" cy="118" r="30" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+          <text x="505" y="124" fill="#f5f5f5" font-size="13">까마귀</text>
+          <circle cx="465" cy="250" r="30" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+          <text x="465" y="256" fill="#f5f5f5" font-size="13">달</text>
+          <circle cx="335" cy="250" r="30" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+          <text x="335" y="256" fill="#f5f5f5" font-size="13">뱀</text>
+          <circle cx="295" cy="118" r="30" fill="#141415" stroke="#f5f5f5" stroke-width="2"/>
+          <text x="295" y="124" fill="#f5f5f5" font-size="13">나비</text>
+        </g>
+        <text x="400" y="152" text-anchor="middle" fill="#f5f5f5" font-family="Archivo Black" font-size="20">THE PACT</text>
+        <text x="400" y="176" text-anchor="middle" fill="#9a9a9e" font-family="Noto Sans KR" font-size="13">하나의 피에서 태어난 다섯 혈통</text>
+      </svg>
+      <div class="laws">
+        <div class="lawcard">
+          <div class="n">01</div>
+          <h3>서로 멸하지 않는다</h3>
+          <p>하나의 피에서 태어난 혈통은 서로를 없애지 않습니다.</p>
+        </div>
+        <div class="lawcard">
+          <div class="n">02</div>
+          <h3>진조의 피는 강제로 취할 수 없다</h3>
+          <p>진조의 피는 빼앗을 수 없으며, 오직 합의로만 나뉩니다.</p>
+        </div>
+        <div class="lawcard key">
+          <div class="n">03</div>
+          <h3>맹약을 깨면 다섯 가문 모두의 적</h3>
+          <p>맹약을 깨뜨린 자는 다섯 가문 모두의 적이 됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Astra Chronicles</span>
+    <span>World Infographic — 2026</span>
+  </footer>
+</div>
+<script>
+  /* hover is the main trigger; tap toggles .active for touch screens */
+  document.querySelectorAll('.houses .house').forEach(function (el) {
+    el.addEventListener('click', function () { el.classList.toggle('active'); });
+  });
+</script>
+<script>
+  /* section titles: snap in when scrolled into view, hide again when scrolled away */
+  var heads = document.querySelectorAll('.sec-head');
+  heads.forEach(function (h) { h.classList.add('reveal'); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    heads.forEach(function (h) { io.observe(h); });
+  } else {
+    heads.forEach(function (h) { h.classList.add('in'); });
+  }
+
+  /* content blocks: rise in one after another (staggered within each group) when scrolled into view */
+  var blocks = document.querySelectorAll('.house, .trait, .face, .note, .principle, .chain, .glass, .lawcard');
+  blocks.forEach(function (el) {
+    var siblings = Array.prototype.indexOf.call(el.parentElement.children, el);
+    el.style.setProperty('--d', (siblings % 4) * 0.12 + 's');
+    el.classList.add('rv');
+  });
+  if ('IntersectionObserver' in window) {
+    var bio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); bio.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    blocks.forEach(function (b) { bio.observe(b); });
+  } else {
+    blocks.forEach(function (b) { b.classList.add('in'); });
+  }
+</script>
+</body>
+</html>
