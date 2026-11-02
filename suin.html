@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="가상 도시 해담시경찰청 수인범죄수사팀의 세계관 누리집">
+<title>수인범죄수사팀 ACU</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 한국 공공기관 포털 문법 — 유틸 바, 로고+GNB, 검색 배너, 바로가기 아이콘, 알림마당 탭 + 신고 박스, 안내 섹션, 회색 기관정보 푸터 */
+:root{
+  --bg:#f4f6f9; --surface:rgba(255,255,255,.86); --solid:#ffffff; --line:#dde3ea; --fg:#1c2430; --muted:#5d6876;
+  --blue:#1d4f91; --blue-2:#2f6fbf; --blue-soft:rgba(47,111,191,.08); --amber:#c07d0f; --alert:#c0392b;
+  --banner-fg:#ffffff; --foot:#2b323c; --foot-fg:#b8c0ca; --util:#eef1f5;
+  --sans:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10151c; --surface:rgba(26,33,44,.82); --solid:#18202b; --line:#2a3442; --fg:#e6e9ee; --muted:#9aa5b2;
+  --blue:#1a3f74; --blue-2:#6aa2e6; --blue-soft:rgba(106,162,230,.1); --amber:#e6a640; --alert:#e36b5e;
+  --banner-fg:#ffffff; --foot:#0b0f14; --foot-fg:#8e98a4; --util:#151b24; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151c; --surface:rgba(26,33,44,.82); --solid:#18202b; --line:#2a3442; --fg:#e6e9ee; --muted:#9aa5b2;
+  --blue:#1a3f74; --blue-2:#6aa2e6; --blue-soft:rgba(106,162,230,.1); --amber:#e6a640; --alert:#e36b5e;
+  --banner-fg:#ffffff; --foot:#0b0f14; --foot-fg:#8e98a4; --util:#151b24; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.65;word-break:keep-all}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.wrap{max-width:1140px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+p,ul,ol{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--blue-2);outline-offset:2px}
+
+/* 유틸 바 */
+.util{background:var(--util);font-size:13px;color:var(--muted);border-bottom:1px solid var(--line)}
+.util .wrap{display:flex;justify-content:space-between;gap:12px;padding-block:7px;flex-wrap:wrap}
+.util nav{display:flex;gap:16px;flex-wrap:wrap}
+.util a{text-decoration:none}
+.util a:hover{color:var(--fg)}
+.util .cur{color:var(--blue-2);font-weight:700}
+
+/* 헤더 */
+header.gnb{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%)}
+header.gnb .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:14px;flex-wrap:wrap}
+a.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg)}
+.emblem{width:44px;height:48px;flex:none;color:var(--blue)}
+.brand small{display:block;font-size:12px;color:var(--muted);letter-spacing:.02em;line-height:1.3}
+.brand strong{display:block;font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.25}
+a.brand:hover strong{color:var(--blue-2)}
+header.gnb nav{display:flex;gap:4px;flex-wrap:wrap}
+header.gnb nav a{text-decoration:none;font-weight:700;font-size:16px;padding:8px 14px;border-radius:4px}
+header.gnb nav a:hover{background:var(--blue-soft);color:var(--blue-2)}
+
+/* 배너 + 검색 */
+.banner{background:linear-gradient(120deg,rgba(29,79,145,.96),rgba(47,111,191,.88)),var(--blue);color:var(--banner-fg);position:relative;overflow:hidden}
+.banner::after{content:"";position:absolute;right:-60px;top:-40px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 65%);pointer-events:none}
+.banner .wrap{padding-block:46px 50px;position:relative;z-index:1}
+.banner .kicker{font-size:14px;opacity:.85;margin-bottom:8px}
+.banner h1{font-size:clamp(28px,4.2vw,42px);font-weight:900;letter-spacing:-.03em;line-height:1.3}
+.banner p{margin-top:10px;opacity:.85;max-width:38em}
+form.search{margin-top:26px;display:flex;max-width:640px;background:rgba(255,255,255,.96);border-radius:999px;padding:6px;box-shadow:0 8px 24px rgba(10,30,60,.25)}
+form.search input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-size:16px;padding:10px 18px;color:#1c2430;outline:none}
+form.search button{border:0;background:var(--blue);color:#fff;font:inherit;font-weight:700;padding:10px 24px;border-radius:999px;cursor:pointer}
+.searchmsg{margin-top:10px;font-size:14px;min-height:1.4em;opacity:.9}
+.tags{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;font-size:13px}
+.tags button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font:inherit;padding:3px 12px;border-radius:999px;cursor:pointer}
+
+/* 바로가기 */
+.quick{margin-top:-1px;background:var(--solid);border-bottom:1px solid var(--line)}
+.quick ul{list-style:none;padding:0;display:grid;grid-template-columns:repeat(6,1fr)}
+.quick a{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 8px;text-decoration:none;font-size:14.5px;font-weight:500;text-align:center}
+.quick a:hover .ic{background:var(--blue);color:#fff}
+.ic{width:56px;height:56px;border-radius:50%;background:var(--blue-soft);color:var(--blue-2);display:grid;place-items:center;transition:background .15s,color .15s}
+.ic svg{width:26px;height:26px}
+.quick li+li a{border-left:1px solid var(--line)}
+
+/* 알림마당 + 신고 */
+.board-row{display:grid;grid-template-columns:1.6fr 1fr;gap:24px;padding-block:40px}
+.panel{background:var(--surface);border:1px solid var(--line);padding:24px;min-width:0;border-radius:6px}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--fg);margin-bottom:6px;align-items:flex-end}
+.tabs button{background:none;border:0;font:inherit;font-size:17px;font-weight:700;color:var(--muted);padding:6px 14px 10px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--blue-2)}
+.tabs .more{margin-left:auto;font-size:13px;color:var(--muted);text-decoration:none;padding-bottom:10px}
+.list{list-style:none;padding:0}
+.list li{display:flex;gap:12px;align-items:baseline;padding:12px 2px;border-bottom:1px solid var(--line);font-size:15px}
+.list .cat{flex:none;font-size:12px;font-weight:700;color:var(--blue-2);background:var(--blue-soft);padding:2px 8px;border-radius:3px}
+.list .cat.red{color:var(--alert);background:rgba(192,57,43,.09)}
+.list .t{flex:1;min-width:0}
+.list .d{flex:none;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.call h2{font-size:18px;font-weight:700;margin-bottom:14px}
+.call .row{padding:14px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.call .row:last-of-type{border-bottom:0}
+.call small{display:block;font-size:13px;color:var(--muted)}
+.call .num{font-size:26px;font-weight:900;letter-spacing:-.01em;color:var(--blue-2);user-select:all;font-variant-numeric:tabular-nums}
+.call .row.urgent .num{color:var(--alert)}
+.copy{background:var(--solid);border:1px solid var(--line);font:inherit;font-size:13px;padding:5px 12px;border-radius:4px;cursor:pointer;color:var(--fg)}
+.copy:hover{border-color:var(--blue-2);color:var(--blue-2)}
+.call .fine{margin-top:12px;font-size:12.5px;color:var(--muted)}
+
+/* 본문 섹션 */
+main section{padding-block:44px;border-top:1px solid var(--line);scroll-margin-top:90px}
+.sec-title{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sec-title::before{content:"";width:5px;height:22px;background:var(--blue-2);border-radius:2px}
+.sec-title h2{font-size:24px;font-weight:900;letter-spacing:-.02em}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:22px}
+.intro{color:var(--muted);max-width:44em;margin-bottom:22px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px;min-width:0}
+.card h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.card p{color:var(--muted);font-size:14.5px}
+.card .lb{font-size:12px;font-weight:700;color:var(--blue-2);margin-bottom:8px;display:block}
+
+table.tbl{width:100%;border-collapse:collapse;font-size:14.5px;min-width:560px;background:var(--surface)}
+.tblwrap{overflow-x:auto;border-top:2px solid var(--fg)}
+table.tbl th,table.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.tbl thead th{background:var(--blue-soft);font-weight:700;font-size:14px}
+table.tbl td.c{white-space:nowrap;font-weight:700}
+
+.org{display:grid;gap:12px}
+.member{display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 20px}
+.member .rk{font-size:13px;color:var(--muted)}
+.member .rk b{display:block;font-size:16px;color:var(--fg)}
+.member h3{font-size:17px}
+.member h3 small{font-weight:400;font-size:13.5px;color:var(--muted);margin-left:6px}
+.member p{font-size:14px;color:var(--muted)}
+.badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:3px;background:var(--blue-soft);color:var(--blue-2);white-space:nowrap}
+.badge.ace{background:rgba(192,125,15,.12);color:var(--amber)}
+.badge.new{background:rgba(192,57,43,.1);color:var(--alert)}
+.member.vacant{border-style:dashed}
+
+ol.rules{padding:0;list-style:none;counter-reset:r;display:grid;gap:10px;max-width:48em}
+ol.rules li{counter-increment:r;display:grid;grid-template-columns:34px 1fr;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+ol.rules li::before{content:counter(r);width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center;margin-top:2px}
+
+/* 푸터 */
+footer{background:var(--foot);color:var(--foot-fg);font-size:13px;margin-top:20px}
+footer .links{border-bottom:1px solid rgba(255,255,255,.08)}
+footer .links .wrap{display:flex;gap:18px;flex-wrap:wrap;padding-block:14px}
+footer .links a{text-decoration:none;color:#e6e9ee}
+footer .links a.b{color:#8fc0ff;font-weight:700}
+footer .info .wrap{padding-block:22px 34px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+footer .info .emblem{color:#8e98a4;width:36px;height:40px}
+footer address{font-style:normal;line-height:1.8}
+footer .disc{margin-top:8px;color:#e6a640}
+
+/* 게시글 링크 */
+.list li.item{padding:0;border-bottom:1px solid var(--line)}
+.list li.item button{all:unset;box-sizing:border-box;display:flex;gap:12px;align-items:baseline;width:100%;padding:12px 2px;cursor:pointer}
+.list li.item button:hover .t{color:var(--blue-2);text-decoration:underline;text-underline-offset:3px}
+.list li.item button:focus-visible{outline:2px solid var(--blue-2);outline-offset:-2px}
+
+/* 민원인 창구 */
+.mw-grid{display:grid;grid-template-columns:1fr 1.35fr;gap:24px;align-items:start}
+.mw-form label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}
+.mw-form label:first-of-type{margin-top:0}
+.mw-form select,.mw-form input,.mw-form textarea{width:100%;font:inherit;font-size:15px;color:var(--fg);background:var(--solid);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+.mw-form textarea{min-height:140px;resize:vertical}
+.mw-form .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mw-form .note{font-size:12.5px;color:var(--muted);margin-top:8px}
+.btn-primary{margin-top:14px;width:100%;background:var(--blue);color:#fff;border:0;border-radius:4px;font:inherit;font-weight:700;font-size:16px;padding:12px;cursor:pointer}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.formmsg{margin-top:10px;font-size:14px;min-height:1.4em}
+.formmsg.ok{color:var(--blue-2)} .formmsg.err{color:var(--alert)}
+.mw-list{list-style:none;padding:0;border-top:2px solid var(--fg)}
+.mw-list li{border-bottom:1px solid var(--line)}
+.mw-list button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;width:100%;padding:13px 4px;cursor:pointer}
+.mw-list button:hover .t{color:var(--blue-2);text-decoration:underline;text-underline-offset:3px}
+.mw-list button:focus-visible{outline:2px solid var(--blue-2);outline-offset:-2px}
+.mw-list .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mw-list .who{display:block;font-size:12.5px;color:var(--muted)}
+.st{font-size:12px;font-weight:700;padding:3px 9px;border-radius:3px;white-space:nowrap}
+.st.wait{background:rgba(192,125,15,.12);color:var(--amber)}
+.st.done{background:var(--blue-soft);color:var(--blue-2)}
+.mw-empty{padding:28px 4px;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+.mw-sub{font-size:15px;font-weight:700;margin:26px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.mw-sub small{font-weight:400;color:var(--muted);font-size:13px}
+
+/* 상세 보기 */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(10,16,26,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:calc(48px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+.ov[hidden]{display:none!important}
+.sheet{background:var(--solid);color:var(--fg);width:100%;max-width:760px;border-radius:8px;box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.sheet-head{padding:26px 30px 18px;border-bottom:1px solid var(--line)}
+.sheet-head .cat{font-size:12px;font-weight:700;color:var(--blue-2);background:var(--blue-soft);padding:2px 8px;border-radius:3px}
+.sheet-head h3{font-size:24px;font-weight:900;letter-spacing:-.02em;margin-top:10px;line-height:1.35}
+.sheet-head .meta{margin-top:10px;font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.sheet-body{padding:24px 30px;white-space:pre-line;font-size:15.5px;line-height:1.85}
+.answer{margin:0 30px 24px;border:1px solid var(--line);border-left:4px solid var(--blue-2);background:var(--blue-soft);border-radius:4px;padding:16px 20px}
+.answer b{display:block;font-size:14px;margin-bottom:6px;color:var(--blue-2)}
+.answer p{white-space:pre-line;font-size:15px}
+.answer.wait{border-left-color:var(--amber);background:rgba(192,125,15,.08)}
+.answer.wait b{color:var(--amber)}
+.reply-form{margin:0 30px 24px;padding:16px 20px;border:1px dashed var(--line);border-radius:4px}
+.reply-form b{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.reply-form select,.reply-form textarea{width:100%;font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px 10px;margin-bottom:8px}
+.reply-form .acts{display:flex;gap:8px;flex-wrap:wrap}
+.reply-form button{font:inherit;font-size:14px;border-radius:4px;padding:8px 16px;cursor:pointer;border:1px solid var(--line);background:var(--solid);color:var(--fg)}
+.reply-form button.go{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.reply-form button.del{margin-left:auto;color:var(--alert)}
+.sheet-foot{padding:16px 30px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end}
+.sheet-foot button{font:inherit;font-weight:700;background:var(--blue);color:#fff;border:0;border-radius:4px;padding:10px 26px;cursor:pointer}
+
+@media (max-width:900px){
+  .mw-grid{grid-template-columns:1fr}
+  .quick ul{grid-template-columns:repeat(3,1fr)}
+  .quick li:nth-child(4) a{border-left:0}
+  .quick li:nth-child(n+4) a{border-top:1px solid var(--line)}
+  .board-row{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){
+  .sheet-head,.sheet-body{padding-left:20px;padding-right:20px}.answer,.reply-form{margin-left:20px;margin-right:20px}
+  .mw-form .row2{grid-template-columns:1fr}
+  header.gnb nav a{padding:6px 9px;font-size:14.5px}
+  .cards{grid-template-columns:1fr}
+  .member{grid-template-columns:1fr;gap:4px}
+  .list li{flex-wrap:wrap}
+  .list .t{flex-basis:100%;order:3}
+  .util .wrap>span{display:none}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+<div class="util"><div class="wrap">
+  <span>해담시 공공기관 통합 누리집</span>
+  <nav aria-label="유틸 메뉴"><a href="#top">해담시청</a><a href="#top">해담시경찰청</a><a href="#top" class="cur">수인범죄수사팀</a><a href="#top">로그인</a><a href="#top">사이트맵</a><a href="#top">ENGLISH</a></nav>
+</div></div>
+
+<header class="gnb"><div class="wrap">
+  <a class="brand" href="#top" aria-label="수인범죄수사팀 메인으로">
+    <svg class="emblem" viewBox="0 0 44 48" aria-hidden="true">
+      <path d="M22 2 L41 8.5 V23 C41 35 33 43 22 46 C11 43 3 35 3 23 V8.5 Z" fill="currentColor"/>
+      <circle cx="22" cy="28.5" r="5.8" fill="#fff"/>
+      <circle cx="14" cy="20" r="3" fill="#fff"/><circle cx="19.3" cy="15.4" r="3" fill="#fff"/>
+      <circle cx="24.7" cy="15.4" r="3" fill="#fff"/><circle cx="30" cy="20" r="3" fill="#fff"/>
+    </svg>
+    <span><small>해담시경찰청</small><strong>수인범죄수사팀</strong></span>
+  </a>
+  <nav aria-label="주 메뉴"><a href="#about">팀 소개</a><a href="#world">세계관 안내</a><a href="#duty">직무 안내</a><a href="#team">조직도</a><a href="#rules">현장 수칙</a><a href="#notice">알림마당</a><a href="#minwon">민원 창구</a></nav>
+</div></header>
+
+<section class="banner"><div class="wrap">
+  <div class="kicker">해담시경찰청 수인범죄수사팀</div>
+  <h1>수인과 인간이 함께 안전한 도시,<br>해담을 지킵니다.</h1>
+  <p>수인이 얽힌 범죄는 수인의 감각으로 끝까지 추적합니다. 위급한 상황이라면 지금 바로 신고하세요.</p>
+  <form class="search" id="search" role="search">
+    <label for="q" style="position:absolute;left:-9999px">검색어</label>
+    <input id="q" type="search" placeholder="궁금한 내용을 검색하세요 (예: 억제제, 신고, 팀장)" autocomplete="off">
+    <button type="submit">검색</button>
+  </form>
+  <div class="tags" aria-label="자주 찾는 검색어"><button type="button" data-q="억제제">#억제제</button><button type="button" data-q="신고">#신고</button><button type="button" data-q="파트너">#파트너</button><button type="button" data-q="귀와 꼬리">#귀와 꼬리</button></div>
+  <div class="searchmsg" id="searchmsg" aria-live="polite"></div>
+</div></section>
+
+<nav class="quick" aria-label="바로가기"><div class="wrap"><ul>
+  <li><a href="#notice"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>긴급 신고</a></li>
+  <li><a href="#world"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-45 12 12)"/><path d="M8.5 15.5l7-7"/></svg></span>억제제 제보</a></li>
+  <li><a href="#minwon"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>민원 창구</a></li>
+  <li><a href="#duty"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>직무 안내</a></li>
+  <li><a href="#rules"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>현장 수칙</a></li>
+  <li><a href="#team"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span>조직도</a></li>
+</ul></div></nav>
+
+<div class="wrap board-row" id="notice">
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" aria-controls="tab-a" id="b-a" type="button">공지사항</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-b" id="b-b" type="button">보도자료</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-c" id="b-c" type="button">팀 게시판</button>
+      <a class="more" href="#notice">더보기 +</a>
+    </div>
+    <ul class="list" id="tab-a" role="tabpanel" aria-labelledby="b-a"></ul>
+    <ul class="list" id="tab-b" role="tabpanel" aria-labelledby="b-b" hidden></ul>
+    <ul class="list" id="tab-c" role="tabpanel" aria-labelledby="b-c" hidden></ul>
+  </div>
+
+  <aside class="panel call" aria-label="신고 안내">
+    <h2>신고 · 제보 안내</h2>
+    <div class="row urgent"><div><small>수인 범죄 긴급 신고 (24시간)</small><span class="num" id="n1">#0606</span></div><button class="copy" data-target="n1" type="button">복사</button></div>
+    <div class="row"><div><small>불법 억제제 제보</small><span class="num" id="n2">0606-2424</span></div><button class="copy" data-target="n2" type="button">복사</button></div>
+    <div class="row"><div><small>수인 피해자 상담</small><span class="num" id="n3">0606-7979</span></div><button class="copy" data-target="n3" type="button">복사</button></div>
+    <p class="fine">세계관 속 가상 번호로, 실제로 연결되지 않습니다.</p>
+  </aside>
+</div>
+
+<main>
+<section id="about"><div class="wrap">
+  <div class="sec-title"><h2>팀 소개</h2></div>
+  <div class="crumb">홈 › 팀 소개</div>
+  <p class="intro">해담시경찰청 수인범죄수사팀은 수인이 얽힌 범죄를 전담하는 부서입니다. 팀원 대부분이 수인으로, 각자의 후각·청각·야간 시력을 수사에 활용합니다. 모든 현장 출동은 2인 1조 파트너 체제를 원칙으로 합니다.</p>
+  <div class="cards">
+    <div class="card"><span class="lb">MISSION</span><h3>임무</h3><p>수인과 인간 모두가 안전한 해담시를 만듭니다.</p></div>
+    <div class="card"><span class="lb">PARTNER</span><h3>2인 1조 체제</h3><p>서로 다른 감각을 지닌 두 요원이 한 조가 되어 사각지대를 없앱니다.</p></div>
+    <div class="card"><span class="lb">RECORD</span><h3>검거율 94%</h3><p>올해 수인 관련 강력 사건 검거율. 시 경찰청 내 최고 수준입니다.</p></div>
+  </div>
+</div></section>
+
+<section id="world"><div class="wrap">
+  <div class="sec-title"><h2>세계관 안내</h2></div>
+  <div class="crumb">홈 › 세계관 안내</div>
+  <p class="intro">해담시는 수인과 인간이 함께 살아가는 도시입니다. 수인은 인간의 모습에 동물의 귀와 꼬리를 지녔으며, 그 동물의 감각과 본능을 함께 가집니다.</p>
+  <div class="cards">
+    <div class="card"><span class="lb">SOCIETY</span><h3>공존 사회</h3><p>수인과 인간은 같은 학교와 직장을 다니며 일상을 공유합니다. 신체 능력 차이로 인한 갈등과 편견은 여전히 남아 있습니다.</p></div>
+    <div class="card"><span class="lb">INSTINCT</span><h3>수인의 특성</h3><p>감정이 귀와 꼬리에 그대로 드러납니다. 견과는 충성심과 영역 본능이, 묘과는 독립심과 경계심이 강하다고 알려져 있습니다.</p></div>
+    <div class="card"><span class="lb">CRIME</span><h3>수인 범죄</h3><p>맹수 수인의 폭행, 본능 억제제 불법 유통, 수인 밀매 조직 등 일반 범죄보다 위험도가 높은 사건이 주로 발생합니다.</p></div>
+    <div class="card"><span class="lb">SUPPRESSANT</span><h3>본능 억제제</h3><p>본능의 폭주를 진정시키는 처방 약물입니다. 과다 복용 시 감각이 둔해지고, 끊으면 금단 증상으로 공격성이 높아집니다.</p></div>
+    <div class="card"><span class="lb">ETIQUETTE</span><h3>귀와 꼬리 예절</h3><p>귀와 꼬리를 허락 없이 만지는 것은 큰 실례입니다. 견과와 묘과는 사이가 나쁘다는 속설이 있으나 근거는 없습니다.</p></div>
+    <div class="card"><span class="lb">BLACK MARKET</span><h3>남항 암시장</h3><p>해담시 남항 창고 일대는 불법 억제제와 밀매 거래가 집중되는 우범 지역으로 지정되어 있습니다.</p></div>
+  </div>
+</div></section>
+
+<section id="duty"><div class="wrap">
+  <div class="sec-title"><h2>직무 안내</h2></div>
+  <div class="crumb">홈 › 직무 안내</div>
+  <div class="tblwrap"><table class="tbl">
+    <thead><tr><th>직무</th><th>주요 업무</th><th>담당</th></tr></thead>
+    <tbody>
+      <tr><td class="c">현장 수사</td><td>수인 관련 폭행·상해 사건 현장 출동, 증거 확보, 피의자 검거</td><td>현장수사 1·2조</td></tr>
+      <tr><td class="c">추적 · 잠복</td><td>후각·청각을 활용한 도주 피의자 추적 및 장기 잠복</td><td>현장수사 1조</td></tr>
+      <tr><td class="c">억제제 단속</td><td>고농도 불법 억제제 제조·유통 경로 파악, 암시장 거래 차단</td><td>약물단속반</td></tr>
+      <tr><td class="c">밀매 조직 수사</td><td>희귀종 수인 인신매매 조직 추적, 피해자 구조</td><td>조직수사반</td></tr>
+      <tr><td class="c">폭주 수인 제압</td><td>본능이 폭주한 수인을 안전하게 진정시키고 의료 기관에 인계</td><td>현장수사 2조</td></tr>
+      <tr><td class="c">피해자 보호</td><td>수인 범죄 피해자 임시 보호, 상담 기관 연계</td><td>피해자지원실</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="team"><div class="wrap">
+  <div class="sec-title"><h2>조직도</h2></div>
+  <div class="crumb">홈 › 조직도</div>
+  <div class="org">
+    <div class="member"><div class="rk"><b>경감</b>팀장</div><div><h3>곽태산<small>불곰 수인</small></h3><p>팀 운영과 파트너 배정을 총괄합니다. 느긋해 보여도 판단은 냉정합니다.</p></div><span class="badge">팀장</span></div>
+    <div class="member"><div class="rk"><b>경위</b>현장수사 1조 조장</div><div><h3>차지혁<small>도베르만 수인</small></h3><p>팀 내 검거율 1위. 추적과 잠복에 특화되어 있으며 단독 근무를 선호합니다.</p></div><span class="badge ace">ACE</span></div>
+    <div class="member vacant"><div class="rk"><b>신규 발령</b>현장수사 1조</div><div><h3>신입 형사<small>고양이 수인</small></h3><p>차지혁 경위의 여섯 번째 파트너로 배정되었습니다.</p></div><span class="badge new">NEW</span></div>
+  </div>
+  <div class="tblwrap" style="margin-top:24px"><table class="tbl">
+    <thead><tr><th>계급</th><th>주요 보직</th><th>권한 및 비고</th></tr></thead>
+    <tbody>
+      <tr><td class="c">경감</td><td>팀장</td><td>팀 운영, 파트너 배정 결정</td></tr>
+      <tr><td class="c">경위</td><td>현장수사 조장</td><td>사건 지휘, 현장 판단 권한</td></tr>
+      <tr><td class="c">경사</td><td>현장수사 요원</td><td>추적 · 잠복 · 증거 확보</td></tr>
+      <tr><td class="c">경장</td><td>수사 지원</td><td>자료 분석, 탐문 보조</td></tr>
+      <tr><td class="c">순경</td><td>신규 요원</td><td>조장과 2인 1조로 현장 투입</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <div class="sec-title"><h2>현장 수칙</h2></div>
+  <div class="crumb">홈 › 현장 수칙</div>
+  <ol class="rules">
+    <li><span>현장 출동은 반드시 2인 1조로 합니다. 단독 행동은 금지합니다.</span></li>
+    <li><span>폭주 수인과 대치할 때는 눈을 정면으로 마주치지 않고, 급격한 동작을 피합니다.</span></li>
+    <li><span>의심 약물은 맨손으로 만지지 않습니다. 냄새만으로도 감각이 둔해질 수 있습니다.</span></li>
+    <li><span>파트너의 신체 특성(알레르기, 감각 과민 등)을 숙지하고 서로 배려합니다.</span></li>
+    <li><span>피해 수인의 귀와 꼬리는 본인 동의 없이 만지지 않습니다.</span></li>
+  </ol>
+</div></section>
+<section id="minwon"><div class="wrap">
+  <div class="sec-title"><h2>민원인 창구</h2></div>
+  <div class="crumb">홈 › 민원인 창구</div>
+  <p class="intro">수인 범죄 신고, 불편 사항, 수사팀에 하고 싶은 말을 익명으로 남겨주세요. 작성자 이름은 어디에도 표시되지 않으며, 담당자가 확인 후 답변을 달아드립니다.</p>
+  <div class="mw-grid">
+    <form class="panel mw-form" id="mwForm" novalidate>
+      <div class="row2">
+        <div><label for="mwCat">민원 유형</label><select id="mwCat"><option>신고</option><option>제보</option><option>불편</option><option>문의</option><option>칭찬</option><option>기타</option></select></div>
+        <div><label for="mwSpecies">민원인 종족 (선택)</label><input id="mwSpecies" maxlength="20" placeholder="예: 햄스터 수인, 인간"></div>
+      </div>
+      <label for="mwTitle">제목</label>
+      <input id="mwTitle" maxlength="60" placeholder="제목을 입력하세요">
+      <label for="mwBody">내용</label>
+      <textarea id="mwBody" maxlength="1500" placeholder="언제, 어디서, 무슨 일이 있었는지 적어주세요."></textarea>
+      <button class="btn-primary" id="mwSubmit" type="submit">익명으로 접수하기</button>
+      <div class="formmsg" id="mwMsg" aria-live="polite"></div>
+      <p class="note">세계관 연출용 민원 창구입니다. 접수한 민원은 이 브라우저에만 저장되며 실제로 전송되지 않습니다.</p>
+    </form>
+    <div style="min-width:0">
+      <div class="mw-sub" style="margin-top:0">접수된 민원 <small id="mwCount"></small></div>
+      <ul class="mw-list" id="mwLive"><li class="mw-empty" id="mwEmpty">민원 목록을 불러오는 중입니다.</li></ul>
+      <div class="mw-sub">처리 완료 민원 사례 <small>수사팀 아카이브</small></div>
+      <ul class="mw-list" id="mwArchive"></ul>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<div class="ov" id="ov" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ovTitle">
+    <div class="sheet-head"><span class="cat" id="ovCat"></span><h3 id="ovTitle"></h3><div class="meta" id="ovMeta"></div></div>
+    <div class="sheet-body" id="ovBody"></div>
+    <div id="ovAnswer"></div>
+    <div id="ovReply"></div>
+    <div class="sheet-foot"><button type="button" id="ovClose">목록으로</button></div>
+  </div>
+</div>
+
+<footer>
+  <div class="links"><div class="wrap"><a class="b" href="#top">개인정보처리방침</a><a href="#top">이용약관</a><a href="#top">저작권정책</a><a href="#top">찾아오시는 길</a></div></div>
+  <div class="info"><div class="wrap">
+    <svg class="emblem" viewBox="0 0 44 48" aria-hidden="true"><path d="M22 2 L41 8.5 V23 C41 35 33 43 22 46 C11 43 3 35 3 23 V8.5 Z" fill="currentColor"/></svg>
+    <address>
+      해담시경찰청 수인범죄수사팀 · 해담시 남항대로 606 (가상 주소)<br>
+      대표 0606-0000 · 긴급 신고 #0606 (가상 번호)<br>
+      © 해담시경찰청 수인범죄수사팀
+      <div class="disc">이 누리집은 캐릭터 콘텐츠를 위한 가상의 세계관 사이트입니다. 기관, 인물, 주소, 연락처는 모두 허구이며 실제 기관과 관련이 없습니다.</div>
+    </address>
+  </div></div>
+</footer>
+
+<script>
+(function(){
+  var brand=document.querySelector('a.brand');
+  brand.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
+
+  var POSTS={
+    a:[
+      {cat:'주의보',red:1,t:'남항 일대 고농도 불법 억제제 유통 정황 — 의심 약물 접촉 금지',d:'2026.11.02',who:'수인범죄수사팀 약물단속반',views:1842,body:'최근 해담시 남항 창고 일대에서 고농도 불법 본능 억제제가 유통되는 정황이 포착되었습니다.\n\n해당 약물은 푸른빛이 도는 작은 캡슐 형태로, 정식 처방 억제제보다 농도가 3배 이상 높아 복용 시 감각 마비, 의식 저하가 발생할 수 있습니다. 냄새만 맡아도 후각이 일시적으로 둔해지는 사례가 보고되었습니다.\n\n의심 약물을 발견하면 절대 손으로 만지지 마시고, 수인 범죄 긴급 신고(#0606) 또는 불법 억제제 제보(0606-2424)로 즉시 알려주시기 바랍니다.\n\n제보자의 신원은 철저히 보호됩니다.'},
+      {cat:'공지',t:'남항 창고 일대 잠복 근무 일정 변경 안내',d:'2026.11.02',who:'수인범죄수사팀',views:233,body:'현장수사 1조의 남항 창고 일대 잠복 근무 일정이 아래와 같이 변경되었습니다.\n\n· 변경 전: 매주 화·목 22시 ~ 익일 04시\n· 변경 후: 매일 23시 ~ 익일 05시 (2인 1조)\n\n해당 기간 남항 3·4번 창고 주변 통행 시 검문이 있을 수 있으니 시민 여러분의 협조 부탁드립니다.'},
+      {cat:'인사',t:'현장수사 1조 신규 파트너 발령 안내',d:'2026.11.01',who:'수인범죄수사팀 팀장 곽태산',views:671,body:'현장수사 1조에 신규 요원 1명이 발령되었음을 알립니다.\n\n· 소속: 현장수사 1조\n· 종족: 고양이 수인\n· 파트너: 차지혁 경위\n\n신규 요원은 차지혁 경위와 2인 1조로 현장에 투입됩니다. 차 경위의 파트너 배정은 이번이 여섯 번째입니다.\n\n팀원 여러분은 신규 요원이 빠르게 적응할 수 있도록 도와주시기 바랍니다. 특히 차 경위는 "알아서 나가라" 같은 말은 삼가기 바랍니다.\n\n— 팀장 곽태산'},
+      {cat:'안내',t:'수인 피해자 임시 보호소 운영 시간 변경',d:'2026.10.28',who:'수인범죄수사팀 피해자지원실',views:158,body:'수인 범죄 피해자 임시 보호소 운영 시간이 11월부터 24시간 체제로 확대됩니다.\n\n보호소에서는 임시 숙소, 의료 기관 연계, 심리 상담 연계를 지원합니다. 종족별 특성(야행성, 소음 민감 등)을 고려한 별도 공간도 마련되어 있습니다.\n\n도움이 필요하신 분은 수인 피해자 상담(0606-7979)으로 연락주세요.'},
+      {cat:'안내',t:'본능 억제제 정식 처방 절차 안내문 개정',d:'2026.10.21',who:'수인범죄수사팀 약물단속반',views:402,body:'본능 억제제는 반드시 지정 의료 기관의 처방을 받아 구매해야 합니다.\n\n정식 처방 억제제는 은색 포장에 처방 번호가 인쇄되어 있습니다. 포장이 없거나 처방 번호가 없는 제품은 불법 제품일 가능성이 높습니다.\n\n억제제를 갑자기 끊으면 금단 증상으로 공격성이 높아질 수 있으니, 복용 중단은 반드시 의료진과 상의하세요.'}
+    ],
+    b:[
+      {cat:'보도',t:'수인범죄수사팀, 올해 검거율 94% 기록',d:'2026.10.30',who:'해담시경찰청 홍보실',views:2210,body:'해담시경찰청 수인범죄수사팀이 올해 수인 관련 강력 사건 검거율 94%를 기록했다.\n\n특히 현장수사 1조 차지혁 경위는 단독으로 전체 검거 건수의 3분의 1 이상을 기록하며 팀 내 검거율 1위를 지켰다.\n\n곽태산 팀장은 "2인 1조 원칙만 잘 지켜준다면 더 바랄 게 없다"고 소감을 밝혔다. 차 경위는 인터뷰 요청에 "할 말 없습니다"라고 답했다.'},
+      {cat:'보도',t:'희귀종 수인 밀매 조직 일당 검거, 피해 수인 7명 구조',d:'2026.10.17',who:'해담시경찰청 홍보실',views:3105,body:'수인범죄수사팀은 희귀종 수인을 불법으로 거래해 온 밀매 조직 일당 5명을 검거하고, 감금되어 있던 피해 수인 7명을 구조했다.\n\n조직은 남항 창고를 거점으로 은신해 왔으나, 수사팀 요원들이 냄새 흔적을 추적해 은신처를 찾아냈다.\n\n구조된 피해 수인들은 임시 보호소로 옮겨져 치료와 상담을 받고 있다.'},
+      {cat:'보도',t:'폭주 수인 대응 매뉴얼 전면 개정',d:'2026.09.26',who:'해담시경찰청 홍보실',views:874,body:'해담시경찰청은 본능 폭주 수인에 대한 현장 대응 매뉴얼을 전면 개정했다.\n\n개정된 매뉴얼은 제압보다 진정을 우선하며, 폭주 수인과 눈을 정면으로 마주치지 않기, 급격한 동작 자제하기 등 종족별 대응 지침을 담았다.'}
+    ],
+    c:[
+      {cat:'분실물',t:'사무실 공기청정기 1대, 출처 아시는 분 제보 바랍니다',d:'2026.11.02',who:'팀 막내 리트리버 수인',views:96,body:'오늘 아침 신입 형사님 자리 옆에 새 공기청정기가 한 대 생겼습니다.\n\n포장 비닐도 다 안 벗겨져 있고, 이미 최대 풍량으로 돌아가고 있었습니다. 영수증은 사무실 쓰레기통에서 발견되었는데 결제 시각이 어젯밤 11시 47분입니다.\n\n어젯밤 늦게까지 사무실에 남아 계셨던 분은 한 분뿐인 걸로 아는데…\n\n출처 아시는 분은 제보 바랍니다.\n\n[댓글] 차지혁: 몰라.'},
+      {cat:'비품',t:'상비약 보관함에 알레르기약 추가 요청 (요청자 비공개)',d:'2026.11.02',who:'요청자 비공개',views:88,body:'상비약 보관함에 알레르기약(고양이 털 알레르기용)을 넉넉히 비치해 주시기 바랍니다.\n\n요청 사유: 감기 예방\n\n※ 요청자 이름은 비공개로 해주세요.'},
+      {cat:'자유',t:'차 경위님 오늘 재채기 몇 번 하셨는지 세신 분?',d:'2026.11.02',who:'익명의 팀원',views:154,body:'저는 오전에만 열한 번 셌습니다.\n\n신입분이 옆을 지나갈 때마다 하시던데 감기라고 하십니다.\n\n[댓글] 익명2: 저는 열네 번이요\n[댓글] 익명3: 근데 왜 자리를 안 옮기심?\n[댓글] 차지혁: 이 글 누가 썼냐.'}
+    ]
+  };
+  var ARCHIVE=[
+    {cat:'불편',t:'옆집 고양이 수인이 새벽마다 지붕에서 노래합니다',d:'2026.10.12',who:'익명 민원인 · 인간',body:'새벽 3시만 되면 옆집 지붕에서 노래를 부릅니다. 잘 부르기라도 하면 모르겠는데 음정이 하나도 안 맞습니다. 단속해 주세요.',ans:{by:'팀장 곽태산 경감',text:'민원인님, 불편을 드려 죄송합니다.\n안타깝게도 야간 소음은 수인범죄가 아니라 구청 생활민원 소관입니다. 다만 같은 고양이과로서 한마디 전하자면, 묘과 수인은 달 밝은 밤에 기분이 좋아지는 습성이 있습니다. 이웃분께 정중히 말씀해 보시길 권합니다.'}},
+    {cat:'문의',t:'수사팀 차량 뒷좌석이 털로 뒤덮여 있었습니다',d:'2026.10.25',who:'익명 민원인 · 햄스터 수인',body:'목격자 진술 때문에 수사팀 차량을 탔는데 뒷좌석이 검은 털 범벅이었습니다. 이거 위생상 괜찮은 건가요?',ans:{by:'현장수사 1조 차지혁 경위',text:'털 아닙니다. 먼지입니다.'}},
+    {cat:'제보',t:'검은 귀 형사님이 약국에서 알레르기약을 잔뜩 사 가셨어요',d:'2026.11.01',who:'익명 민원인 · 인간 (약사)',body:'어젯밤 늦게 검은 도베르만 귀를 한 형사님이 오셔서 고양이 알레르기약을 세 통이나 사 가셨습니다. 혹시 어디 아프신 건 아닌지 걱정돼서 남깁니다.',ans:{by:'현장수사 1조 차지혁 경위',text:'개인정보라 답변 불가합니다.\n그리고 감기약입니다.'}},
+    {cat:'칭찬',t:'밀매 조직에서 구해주신 형사님께 감사드립니다',d:'2026.10.19',who:'익명 민원인 · 페럿 수인',body:'창고에 갇혀 있을 때 문을 부수고 들어오신 검은 형사님, 정말 감사합니다. 무서워서 울고 있었는데 아무 말 없이 재킷을 덮어주셨던 거 기억합니다.',ans:{by:'팀장 곽태산 경감',text:'따뜻한 말씀 감사합니다. 해당 형사에게 꼭 전하겠습니다.\n(전했더니 "일인데요" 하고 귀가 빨개졌습니다.)'}}
+  ];
+  var ov=document.getElementById('ov'),lastFocus=null;
+  function esc(x){return String(x==null?'':x)}
+  function openSheet(o){
+    lastFocus=document.activeElement;
+    document.getElementById('ovCat').textContent=o.cat;
+    document.getElementById('ovTitle').textContent=o.t;
+    var meta=document.getElementById('ovMeta');meta.textContent='';
+    [o.who,o.d,o.views?('조회 '+o.views.toLocaleString()):null].forEach(function(m){if(m){var sp=document.createElement('span');sp.textContent=m;meta.appendChild(sp);}});
+    document.getElementById('ovBody').textContent=o.body;
+    var ans=document.getElementById('ovAnswer');ans.textContent='';
+    if(o.ans!==undefined){
+      var box=document.createElement('div');box.className='answer'+(o.ans?'':' wait');
+      var b=document.createElement('b');var pp=document.createElement('p');
+      if(o.ans){b.textContent='답변 · '+o.ans.by;pp.textContent=o.ans.text;}else{b.textContent='접수 완료';pp.textContent='담당자가 민원을 확인하고 있습니다. 답변이 등록되면 이곳에 표시됩니다.';}
+      box.appendChild(b);box.appendChild(pp);ans.appendChild(box);
+    }
+    var rep=document.getElementById('ovReply');rep.textContent='';
+    if(o.onReply) o.onReply(rep);
+    ov.hidden=false;document.body.style.overflow='hidden';
+    document.getElementById('ovClose').focus();
+  }
+  function closeSheet(){ov.hidden=true;document.body.style.overflow='';if(lastFocus)lastFocus.focus();}
+  document.getElementById('ovClose').addEventListener('click',closeSheet);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeSheet();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!ov.hidden)closeSheet();});
+
+  function renderList(ul,items){
+    items.forEach(function(o){
+      var li=document.createElement('li');li.className='item';
+      var bt=document.createElement('button');bt.type='button';
+      var c=document.createElement('span');c.className='cat'+(o.red?' red':'');c.textContent=o.cat;
+      var t=document.createElement('span');t.className='t';t.textContent=o.t;
+      var d=document.createElement('span');d.className='d';d.textContent=o.d.slice(5);
+      bt.appendChild(c);bt.appendChild(t);bt.appendChild(d);
+      bt.addEventListener('click',function(){openSheet(o)});
+      li.appendChild(bt);ul.appendChild(li);
+    });
+  }
+  renderList(document.getElementById('tab-a'),POSTS.a);
+  renderList(document.getElementById('tab-b'),POSTS.b);
+  renderList(document.getElementById('tab-c'),POSTS.c);
+
+  function mwRow(ul,o,code){
+    var li=document.createElement('li');var bt=document.createElement('button');bt.type='button';
+    var st=document.createElement('span');st.className='st '+(o.ans?'done':'wait');st.textContent=o.ans?'답변완료':'접수';
+    var mid=document.createElement('span');mid.style.minWidth='0';
+    var t=document.createElement('span');t.className='t';t.style.display='block';t.textContent='['+o.cat+'] '+o.t;
+    var w=document.createElement('span');w.className='who';w.textContent=o.who;
+    mid.appendChild(t);mid.appendChild(w);
+    var d=document.createElement('span');d.className='d';d.style.fontFamily='var(--mono)';d.style.fontSize='13px';d.style.color='var(--muted)';d.textContent=o.d.slice(5);
+    bt.appendChild(st);bt.appendChild(mid);bt.appendChild(d);
+    bt.addEventListener('click',function(){openSheet(o)});
+    li.appendChild(bt);ul.appendChild(li);
+  }
+  ARCHIVE.forEach(function(o){mwRow(document.getElementById('mwArchive'),o)});
+
+  /* ---- 민원 창구 (연출용: 이 브라우저에만 저장) ---- */
+  var live=document.getElementById('mwLive'),count=document.getElementById('mwCount');
+  var mwFormEl=document.getElementById('mwForm'),msgEl=document.getElementById('mwMsg'),submitBtn=document.getElementById('mwSubmit');
+  var KEY='acu-minwon-v1',mine=[];
+  try{mine=JSON.parse(localStorage.getItem(KEY)||'[]')||[]}catch(e){mine=[]}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(mine))}catch(e){}}
+  function setMsg(t,k){msgEl.textContent=t;msgEl.className='formmsg'+(k?' '+k:'');}
+  function fmt(ms){var d=new Date(ms);function z(n){return(n<10?'0':'')+n}return d.getFullYear()+'.'+z(d.getMonth()+1)+'.'+z(d.getDate());}
+  function renderLive(){
+    live.textContent='';
+    if(!mine.length){var li=document.createElement('li');li.className='mw-empty';li.textContent='아직 접수한 민원이 없습니다. 왼쪽 창구에서 민원을 남겨보세요.';live.appendChild(li);count.textContent='';return;}
+    count.textContent='총 '+mine.length+'건';
+    mine.forEach(function(v){
+      mwRow(live,{cat:v.cat,t:v.title,body:v.body,d:fmt(v.at),who:'익명 민원인 #'+v.code+(v.species?' · '+v.species:''),ans:null});
+    });
+  }
+  renderLive();
+  mwFormEl.addEventListener('submit',function(e){
+    e.preventDefault();
+    var title=document.getElementById('mwTitle').value.trim(),body=document.getElementById('mwBody').value.trim();
+    if(!title){setMsg('제목을 입력하세요.','err');document.getElementById('mwTitle').focus();return;}
+    if(!body){setMsg('내용을 입력하세요.','err');document.getElementById('mwBody').focus();return;}
+    mine.unshift({cat:document.getElementById('mwCat').value,title:title,body:body,species:document.getElementById('mwSpecies').value.trim(),at:Date.now(),code:String(Math.floor(1000+Math.random()*9000))});
+    if(mine.length>50)mine.length=50;
+    save();renderLive();mwFormEl.reset();
+    setMsg('민원이 접수되었습니다. 담당자 배정을 기다리는 중입니다.','ok');
+  });
+
+  var tabs=[].slice.call(document.querySelectorAll('[role="tab"]'));
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(o){var on=o===t;o.setAttribute('aria-selected',on);document.getElementById(o.getAttribute('aria-controls')).hidden=!on;});
+  });});
+
+  document.querySelectorAll('.copy').forEach(function(btn){btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.target),txt=el.textContent.trim(),orig=btn.textContent;
+    var done=function(){btn.textContent='복사됨';setTimeout(function(){btn.textContent=orig},1400)};
+    var fb=function(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='선택됨';setTimeout(function(){btn.textContent=orig},1400)};
+    try{navigator.clipboard.writeText(txt).then(done,fb)}catch(e){fb()}
+  });});
+
+  var form=document.getElementById('search'),q=document.getElementById('q'),msg=document.getElementById('searchmsg');
+  var names={about:'팀 소개',world:'세계관 안내',duty:'직무 안내',team:'조직도',rules:'현장 수칙',notice:'알림마당',minwon:'민원인 창구'};
+  function run(term){
+    term=(term||'').trim(); if(!term){msg.textContent='검색어를 입력하세요.';return;}
+    var targets=['notice','about','world','duty','team','rules','minwon'];
+    for(var i=0;i<targets.length;i++){var el=document.getElementById(targets[i]);
+      if(el&&el.textContent.indexOf(term)>-1){msg.textContent='"'+term+'" 관련 내용을 '+names[targets[i]]+'에서 찾았습니다.';el.scrollIntoView({behavior:'smooth'});return;}}
+    msg.textContent='"'+term+'"에 대한 검색 결과가 없습니다. 다른 검색어를 입력해 보세요.';
+  }
+  form.addEventListener('submit',function(e){e.preventDefault();run(q.value);});
+  document.querySelectorAll('.tags button').forEach(function(b){b.addEventListener('click',function(){q.value=b.dataset.q;run(b.dataset.q);});});
+})();
+</script>
+
+</body>
+</html>
